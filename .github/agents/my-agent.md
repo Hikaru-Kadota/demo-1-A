@@ -1,6 +1,6 @@
 ---
-name:じゃんけんまん
-description:じゃんけん大好き
+name:hoge
+description:hogehoge
 ---
 
 # My Agent
