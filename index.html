@@ -16,18 +16,21 @@
         <p class="subtitle">やることを整理して、ひとつずつ進めましょう。</p>
       </header>
 
-      <form class="todo-form" id="todo-form">
+      <form class="todo-form" id="todo-form" novalidate>
         <label class="visually-hidden" for="todo-input">新しいTODO</label>
         <input
           id="todo-input"
           name="todo"
           type="text"
           placeholder="新しいTODOを入力..."
-          maxlength="200"
+          maxlength="300"
+          autocomplete="off"
+          aria-describedby="todo-error"
           required
         >
         <button type="submit">追加する</button>
       </form>
+      <p class="form-error" id="todo-error" aria-live="polite"></p>
 
       <section class="todo-section" aria-labelledby="list-heading">
         <div class="section-heading">

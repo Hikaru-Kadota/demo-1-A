@@ -1,4 +1,10 @@
-import { addTodo, deleteTodo, toggleTodo } from "./todos.mjs";
+import {
+  addTodo,
+  completeTodo,
+  deleteTodo,
+  MAX_TITLE_LENGTH,
+  MAX_TODOS,
+} from "./todos.mjs";
 
 const storageKey = "demo-1-a-todos";
 const form = document.querySelector("#todo-form");
@@ -19,8 +25,13 @@ function readTodos() {
         todo &&
         typeof todo.id === "string" &&
         typeof todo.title === "string" &&
-        typeof todo.completed === "boolean",
-    );
+        (typeof todo.isCompleted === "boolean" ||
+          typeof todo.completed === "boolean"),
+    ).map((todo) => ({
+      id: todo.id,
+      title: todo.title,
+      isCompleted: todo.isCompleted ?? todo.completed,
+    }));
   } catch {
     return [];
   }
@@ -42,17 +53,21 @@ function renderTodos() {
   for (const todo of todos) {
     const item = document.createElement("li");
     item.className = "todo-item";
-    if (todo.completed) {
+    if (todo.isCompleted) {
       item.classList.add("is-completed");
     }
 
     const checkbox = document.createElement("input");
     checkbox.className = "todo-checkbox";
     checkbox.type = "checkbox";
-    checkbox.checked = todo.completed;
-    checkbox.setAttribute("aria-label", `${todo.title}を完了にする`);
+    checkbox.checked = todo.isCompleted;
+    checkbox.disabled = todo.isCompleted;
+    checkbox.setAttribute(
+      "aria-label",
+      todo.isCompleted ? `${todo.title}（完了済み）` : `${todo.title}を完了にする`,
+    );
     checkbox.addEventListener("change", () => {
-      todos = toggleTodo(todos, todo.id);
+      todos = completeTodo(todos, todo.id);
       saveTodos();
       renderTodos();
     });
@@ -76,16 +91,43 @@ function renderTodos() {
     list.append(item);
   }
 
-  const remainingTodos = todos.filter((todo) => !todo.completed).length;
-  count.textContent = `${remainingTodos}件 / ${todos.length}件`;
+  const completedTodos = todos.filter((todo) => todo.isCompleted).length;
+  count.textContent = `${todos.length}件 / 完了 ${completedTodos}件`;
   emptyState.hidden = todos.length > 0;
 }
 
+function showInputError(message) {
+  input.setAttribute("aria-invalid", "true");
+  document.querySelector("#todo-error").textContent = message;
+  input.focus();
+}
+
+input.addEventListener("input", () => {
+  input.removeAttribute("aria-invalid");
+  document.querySelector("#todo-error").textContent = "";
+});
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  todos = addTodo(todos, input.value, crypto.randomUUID());
+  const title = input.value.trim();
+  if (!title) {
+    showInputError("TODOを入力してください。");
+    return;
+  }
+  if (title.length > MAX_TITLE_LENGTH) {
+    showInputError("タイトルは40文字以内で入力してください");
+    return;
+  }
+  if (todos.length >= MAX_TODOS) {
+    showInputError("TODOは最大20件まで登録できます");
+    return;
+  }
+
+  todos = addTodo(todos, title, crypto.randomUUID());
   saveTodos();
   renderTodos();
+  input.removeAttribute("aria-invalid");
+  document.querySelector("#todo-error").textContent = "";
   input.value = "";
   input.focus();
 });

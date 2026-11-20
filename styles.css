@@ -110,6 +110,13 @@ h1 {
   transform: translateY(1px);
 }
 
+.form-error {
+  min-height: 24px;
+  margin: -26px 0 20px;
+  color: #a51d2e;
+  font-size: 0.84rem;
+}
+
 .todo-form button:focus-visible,
 .delete-button:focus-visible,
 .todo-checkbox:focus-visible {
@@ -160,6 +167,10 @@ h1 {
   margin: 0;
   accent-color: #586bc6;
   cursor: pointer;
+}
+
+.todo-checkbox:disabled {
+  cursor: default;
 }
 
 .todo-title {
