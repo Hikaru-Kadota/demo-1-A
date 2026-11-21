@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>TODOリスト</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.mjs"></script>
+  </head>
+  <body>
+    <main class="todo-app">
+      <header class="app-header">
+        <p class="eyebrow">MY DAY, MY TASKS</p>
+        <h1>TODOリスト</h1>
+        <p class="subtitle">やることを整理して、ひとつずつ進めましょう。</p>
+      </header>
+
+      <form class="todo-form" id="todo-form" novalidate>
+        <label class="visually-hidden" for="todo-input">新しいTODO</label>
+        <input
+          id="todo-input"
+          name="todo"
+          type="text"
+          placeholder="新しいTODOを入力..."
+          maxlength="300"
+          autocomplete="off"
+          aria-describedby="todo-error"
+          required
+        >
+        <button type="submit">追加する</button>
+      </form>
+      <p class="form-error" id="todo-error" aria-live="polite"></p>
+
+      <section class="todo-section" aria-labelledby="list-heading">
+        <div class="section-heading">
+          <h2 id="list-heading">今日のTODO</h2>
+          <span class="todo-count" id="todo-count" aria-live="polite"></span>
+        </div>
+        <ul class="todo-list" id="todo-list"></ul>
+        <p class="empty-state" id="empty-state">TODOはまだありません。最初のひとつを追加しましょう。</p>
+      </section>
+      <p class="save-note">TODOはこのブラウザに自動保存されます。</p>
+    </main>
+  </body>
+</html>
